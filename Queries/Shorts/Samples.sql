@@ -423,13 +423,181 @@ truncate table ClassMates;-- we can't change because it is a reference to other 
 drop table ClassMates;-- we can't change because it is a reference to other tables (we have to delete all reference)
 
 
+-- TODO //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+-- TODO --> Inner Join
+
+/*
+Joins --> 1- Inner Join 2- Outer Join 3- Self Join
+inner join; return only the matching records from the two tables (they should be related to each other)
+select TableName1.ColumnName1, ... from TableName2 INNER JOIN TableName1
+OM TableName2.ColumnName2 = TableNAme1.ColumnName2;
+ */
+
+select * from LOCATIONS L inner join COUNTRIES C on C.COUNTRY_ID = L.COUNTRY_ID;
+
+select c.COUNTRY_NAME, l.CITY
+from LOCATIONS L inner join COUNTRIES C
+on C.COUNTRY_ID = L.COUNTRY_ID;
 
 
 
+-- TODO --> Outer Join: Left outer join
+
+/*
+ Outer Join --> 1- Left Outer Join 2- Right Outer Join 3- Full Outer Join
+ */
+
+ select * from customer c left outer join address a on c.address_id = a.address_id;
+
+-- left outer join returns the matching records, and left table' none matching records
+select c.customer_id, c.firstName, c.LastName, a.address, a.phone
+from customer c left outer join address a on c.address_id = a.address_id;
+
+-- left outer join with where: returns the none matching records from left table
+select c.customer_id, c.firstName, c.LastName, a.address, a.phone
+from customer c left outer join address a on c.address_id = a.address_id
+where c.address_id is null ;
+
+
+-- TODO --> Outer Join: Right outer join
+
+/*
+ Outer Join --> 1- Left Outer Join 2- Right Outer Join 3- Full Outer Join
+ */
+
+
+select * from customer c right outer join address a on c.address_id = a.address_id;
+
+-- right outer join returns the matching records, and right table' none matching records
+select c.customer_id, c.firstName, c.LastName, a.address, a.phone
+from customer c right outer join address a on c.address_id = a.address_id;
+
+-- right outer join with where: returns the none matching records from right table
+select c.customer_id, c.firstName, c.LastName, a.address, a.phone
+from customer c right outer join address a on c.address_id = a.address_id
+where c.address_id is null ;
 
 
 
+-- TODO --> Outer Join: Full outer join
+
+/*
+ Outer Join --> 1- Left Outer Join 2- Right Outer Join 3- Full Outer Join
+ */
+
+-- full outer join without where: displays the matching result from both tables, and non matching from left table, then non matching records from right table
+select * from customer c full outer join address a on c.address_id = a.address_id;
+
+select c.customer_id, c.firstName, c.LastName, a.address, a.phone
+from customer c full outer join address a on c.address_id = a.address_id;
+
+
+-- full outer join with where
+-- full outer join with where: non matching from left table, then non matching records from right table
+
+select c.customer_id, c.firstName, c.LastName, a.address, a.phone
+from customer c full outer join address a on c.address_id = a.address_id
+where c.address_id is null or a.address_id is null                            ;
+
+
+-- TODO --> Self Join
+
+-- Joins --> 1- Inner Join 2- Outer Join 3- Self Join
+
+-- Self join: joining the table itself --> select ColumnName from TableName a join TableName b on a.key=b.key;
+
+select EMPLOYEE_ID, FIRST_NAME, LAST_NAME, MANAGER_ID from EMPLOYEES;
+
+
+select e1.EMPLOYEE_ID, e1.FIRST_NAME, e1.LAST_NAME, e1.MANAGER_ID, e2.FIRST_NAME, e2.LAST_NAME
+from EMPLOYEES e1 join EMPLOYEES e2 on e1.MANAGER_ID=e2.EMPLOYEE_ID;
+
+select e1.EMPLOYEE_ID, e1.FIRST_NAME, e1.LAST_NAME, e1.MANAGER_ID, e2.FIRST_NAME||' '||e2.LAST_NAME as FullName
+from EMPLOYEES e1 join EMPLOYEES e2 on e1.MANAGER_ID=e2.EMPLOYEE_ID;
+
+select e2.FIRST_NAME||' '||e2.LAST_NAME as "Manager FullName" from
+EMPLOYEES e1 join EMPLOYEES e2 on e1.MANAGER_ID= e2.EMPLOYEE_ID group by e2.FIRST_NAME||' '||e2.LAST_NAME;
+
+select e2.FIRST_NAME||' '||e2.LAST_NAME as "Manager FullName", count(*)from
+EMPLOYEES e1 join EMPLOYEES e2 on e1.MANAGER_ID= e2.EMPLOYEE_ID group by e2.FIRST_NAME||' '||e2.LAST_NAME;
 
 
 
+-- TODO --> Set Operators: Union, Union All, Intersect, Minus
 
+-- Preconditions for SET operators are
+--               1- We need 2 independent queries
+--               2- Same number of columns in select statement
+--               3- Same data type in sam order
+
+create table Developers(
+
+                           Id_Number Integer primary key,
+
+                           Names varchar(30),
+
+                           Salary Integer
+
+);
+
+create table Testers(
+
+                        Id_Number Integer primary key,
+
+                        Names varchar(30),
+
+                        Salary Integer
+
+);
+
+
+
+insert all
+
+into developers values (1, 'Nurullah', 155000)
+
+into developers values (2, 'Safwan', 142000)
+
+into developers values (3, 'Erhan', 850000)
+
+into developers values (4, 'Seyfo', 120000)
+
+into testers values (1, 'Seyfo', 110000)
+
+into testers values(2, 'Hakan', 105000)
+
+into testers values (3, 'Ibrohim', 100000)
+
+select * from dual;
+
+commit work;
+
+-- Union operator      -->  select ColumnName1, ColumnName2, ... from TableName1 union select columnName1, columnName2, ... from TableName2;
+-- Ascending order (sort) and shows only 1 time the commons (removes duplicates)
+
+select * from DEVELOPERS
+union
+select * from TESTERS;
+
+-- Union All operator  -->  select ColumnName1, ColumnName2, ... from TableName1 union select columnName1, columnName2, ... from TableName2;
+-- No order and shows duplicated the commons
+
+select * from DEVELOPERS
+union all
+select * from TESTERS;
+
+-- Intersect operator  -->
+-- Shows matching part
+
+select names from DEVELOPERS
+intersect
+select names from TESTERS;
+
+-- Minus operator      -->
+-- Shows first queries non matching parts
+
+select Names from DEVELOPERS
+minus
+select Names from TESTERS;
