@@ -10,16 +10,38 @@
 SELECT o.OrderID , c.CustomerName, e.FIRSTNAME
 FROM ORDERS o
          INNER JOIN CUSTOMERS c ON o.CustomerID = c.CustomerID
-         INNER JOIN EMPLOYEES e ON o.EmployeeID = e.EmployeeID
+         INNER JOIN AGENTS e ON o.EmployeeID = e.EmployeeID;
 -- 5. Find out OrderDetailID and ProductName using the OrderDetails table and Products table
 -- they are related by ProductID
+SELECT ORDERDETAILID, PRODUCTNAME
+from ORDERDETAILS join PRODUCTS P on P.PRODUCTID = ORDERDETAILS.PRODUCTID
+;
 
 -- OPTIONAL TASKS
 --O1. FIND OUT HOW MANY ORDERS EACH CUSTOMER MADE, INCLUDING THOSE CUSTOMERS WHO MADE NO ORDER
+SELECT C.CUSTOMERNAME, count(OD.QUANTITY) as HowManyOrders
+from CUSTOMERS C full outer join ORDERS O  on C.CUSTOMERID = O.CUSTOMERID full outer join ORDERDETAILS OD on O.ORDERID = OD.ORDERID
+group by C.CUSTOMERNAME order by count(QUANTITY);
+
 --O2. FIND OUT COUNT OF PRODUCTS FOR EACH ORDER FROM OrderDetails table
+
+SELECT ORDERID, count(QUANTITY) as CountOfProducts
+from ORDERDETAILS
+group by ORDERID;
+
 --O3. FIND OUT EMPLOYEE FirstName and Count of ORDER they processed
 -- including those employees did not process any order (Adam)
+
+select CUSTOMERNAME, count(QUANTITY)
+from ORDERDETAILS join CUSTOMERS join ORDERS O on CUSTOMERS.CUSTOMERID = O.CUSTOMERID on ORDERDETAILS.ORDERID = O.ORDERID
+group by CUSTOMERNAME order by count(QUANTITY);
+
 --O4. Find out How much each ORDER COST - SUM OF ALL PRODUCT PRICE IN ORDER DETAILS FOR EACH ORDER
+
+select ORDERID, sum(PRICE)
+from ORDERDETAILS full outer join PRODUCTS on ORDERDETAILS.PRODUCTID = PRODUCTS.PRODUCTID
+group by ORDERID;
+
 /**
   -- FIND OUT HOW MUCH EACH ORDER COST
 -- EACH ORDER CONSISTS OF MULTIPLE LINE ITEMS CAN BE FOUND IN ORDER DETAILS TABLE
@@ -29,15 +51,24 @@ FROM ORDERS o
  */
 SELECT oe.OrderID , SUM(oe.Quantity * p.Price) AS ORDER_COST
 FROM OrderDetails oe
-         INNER JOIN Products p ON p.ProductID = oe.ProductID
-GROUP BY oe.OrderID
+INNER JOIN Products p ON p.ProductID = oe.ProductID
+GROUP BY oe.OrderID;
 
 ---- PART 1
 
 -- CUSTOMERS TABLE
 -- 1.	Display CUSTOMERNAME AND ADDRESS IF CONTACTNAME is Pedro Afonso
+
+select CUSTOMERNAME , ADDRESS
+from CUSTOMERS
+where CONTACTNAME = 'Pedro Afonso';
+
 -- 2.	Display CUSTOMERS FullAddress(alias) in below format by concatenating
 -- 3.	ADDRESS , CITY , POSTALCODE, COUNTRY
+
+select ADDRESS ||', '|| CUSTOMERS.CITY ||', '|| POSTALCODE ||', '|| COUNTRY as FullAddress
+from CUSTOMERS;
+
 -- 4.	Display CUSTOMERS THAT DOES NOT HAVE POSTALCODE
 -- 5.	Display all CUSTOMERS with POSTALCODE contains space or -
 -- 6.	Display CUSTOMERS with ID between 10-25
