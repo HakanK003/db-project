@@ -70,38 +70,131 @@ select ADDRESS ||', '|| CUSTOMERS.CITY ||', '|| POSTALCODE ||', '|| COUNTRY as F
 from CUSTOMERS;
 
 -- 4.	Display CUSTOMERS THAT DOES NOT HAVE POSTALCODE
+
+select CONTACTNAME, POSTALCODE from CUSTOMERS where POSTALCODE is null ;
+
 -- 5.	Display all CUSTOMERS with POSTALCODE contains space or -
+
+select CONTACTNAME, POSTALCODE from CUSTOMERS where POSTALCODE like '% %' or POSTALCODE like '%-%';
+
 -- 6.	Display CUSTOMERS with ID between 10-25
+
+select CONTACTNAME, CUSTOMERID from CUSTOMERS where CUSTOMERID between 10 and 25;
+
 -- 7.	Display CUSTOMERS if address ends with Rd. Blvd. or Road
+
+select CONTACTNAME, ADDRESS from CUSTOMERS where ADDRESS like '%Rd.' or ADDRESS like '%Blvd.' or ADDRESS like '%Road';
+
 -- a.	GET THE COUNT OF ABOVE RESULT WITH COUNT(*)
 -- 8.	Display All Customers in UK , US if POSTALCODE is not WX3 6FW, 97403
+
+select CONTACTNAME, COUNTRY, POSTALCODE
+from CUSTOMERS
+where COUNTRY in ('USA', 'UK') and not POSTALCODE in ('WX3 6FW','97403');
+
+
+select count(*) from (
+                         select CONTACTNAME, COUNTRY, POSTALCODE
+                         from CUSTOMERS
+                         where COUNTRY in ('USA', 'UK') and not POSTALCODE in ('WX3 6FW','97403')
+
+                         );
+
 -- 9.	Display CUSTOMERS Count in CITY Of LONDON
+
+select CONTACTNAME, COUNTRY, CITY
+from CUSTOMERS
+where CITY = 'London';
+
+select count(*) from (
+
+                     select CONTACTNAME, COUNTRY, CITY
+                     from CUSTOMERS
+                     where CITY = 'London'
+
+                         );
+
+
 -- 10.	Display CUSTOMERS Count for EACH CITY
+
+select CITY, count(CUSTOMERNAME) from CUSTOMERS group by CITY;
+
 -- 11.	Display CUSTOMERS Count for EACH COUNTRY
 -- 12.	Display CUSTOMERS Count for EACH COUNTRY
+
+select COUNTRY, count(CUSTOMERNAME) from CUSTOMERS group by COUNTRY;
+
 -- 13.	Filter the result only display if Count is more than 5
+
+select COUNTRY, count(CUSTOMERNAME)
+from CUSTOMERS
+group by COUNTRY
+having count(CUSTOMERNAME) > 5;
+
 --
 -- CATEGORIES TABLE
 -- 14.	Display All Categories contains 'es' in Description excluding coffees
+
+select CATEGORYNAME, DESCRIPTION
+from CATEGORIES
+where DESCRIPTION like '%es%' and not DESCRIPTION like '%coffees%';
+
 -- 15.	Display CATEGORYNAME with ID of 1, 5 , 7
+
+select CATEGORYNAME, CATEGORYID
+from CATEGORIES
+where CATEGORYID in (1,5,7);
+
 -- 16.	Display CATEGORYNAME and LENGTH of DESCRIPTION
+
+select CATEGORYNAME, length(DESCRIPTION) from CATEGORIES;
+
 -- 17.	 Display MAX(LENGTH(DESCRIPTION))
+
+select CATEGORYNAME, DESCRIPTION, length(DESCRIPTION)
+from CATEGORIES
+where length(DESCRIPTION) = (
+    select max( length(DESCRIPTION) ) from CATEGORIES
+    );
 
 ---- PART 2
 
 -- EMPLOYEES TABLE (NOT FROM HR)
 
 -- 18. Display All Employees with BA Degree (contains BA in NOTES)
+
+select * from AGENTS where NOTES like '%BA%';
+
 -- 19. Display youngest Employee Birthday
+
+select * from AGENTS
+where BIRTHDATE = (
+    Select max(BIRTHDATE) from AGENTS
+                               );
 
 -- ORDERS TABLE
 
 -- 20. Display All orders processed by Employee with EmployeeID 5,3
+
+select * from ORDERS where EMPLOYEEID in (3, 5);
+
 -- 21. Display All orders made by Customer with CustomerID between 70-80
+
+select * from ORDERS where CUSTOMERID between 70 and 80;
+
 -- 22. Display All orders shipped by Shipper with ShipperID 3
+
+select * from ORDERS where SHIPPERID = 3;
+
 -- 23. Display Count of Distinct CustomerId to show how many unique customers made these orders
+
+select distinct CUSTOMERID, count(ORDERID) from ORDERS group by CUSTOMERID;
+
 -- 24. OPTIONAL : Display Orders made before 1996-07-10
 -- USE WHERE ORDER_DATE < TO_DATE('1996-07-10','YYY-MM--DD')
+
+select * from ORDERS
+USE WHERE ORDERDATE < TO_DATE('1996-07-10','YYYY-MM-DD');
 
 -- ORDERDETAILS TABLE
 -- 25. Display All orderdetails for ORDER with ORDERID 10255
