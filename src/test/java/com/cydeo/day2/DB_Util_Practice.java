@@ -7,9 +7,9 @@ public class DB_Util_Practice {
     public static void main(String[] args) {
 
 
-        String url = "jdbc:oracle:thin:@54.236.150.168:1521:XE" ;
-        String username = "hr" ;
-        String password = "hr" ;
+        String url = "jdbc:oracle:thin:@IP:1521:XE" ;
+        String username = "" ;
+        String password = "" ;
 
         // This will create connection and save the connection to static variable of utility
         DB_Util.createConnection(url, username, password);

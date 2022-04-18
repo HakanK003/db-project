@@ -18,9 +18,9 @@ public class GettingColumnInformation {
 
     public static void main(String[] args) throws SQLException {
 
-        String url = "jdbc:oracle:thin:@54.236.150.168:1521:XE" ;
-        String username = "hr" ;
-        String password = "hr" ;
+        String url = "jdbc:oracle:thin:@IP:1521:XE" ;
+        String username = "" ;
+        String password = "" ;
 
         Connection conn = DriverManager.getConnection(url,username,password) ;
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

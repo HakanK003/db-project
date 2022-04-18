@@ -27,7 +27,7 @@ public class Library2DB_Test {
          * 8. Iterate over the ResultSet object and print out books name
          */
 
-        String url = "jdbc:mysql://34.230.35.214:3306/library2";
+        String url = "jdbc:mysql://IP:3306/library2";
         String username = "library2_client";
         String password = "6s2LQQTjBcGFfDhY" ;
 
