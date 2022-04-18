@@ -8,7 +8,7 @@ public class DB_Util {
 
     // declaring at class level so all methods can access
     private static Connection con ;
-    private static Statement stm ;
+    private static Statement stmt;
     private static ResultSet rs ;
     private static ResultSetMetaData rsmd ;
 
@@ -35,21 +35,22 @@ public class DB_Util {
 
 
     /**
-     * Run the sql query provided and return ResultSet object
+     * Run the sql query provided and set the
+     * Statement, ResultSet, ResultSetMetaData object value
+     * for all other methods to use
+     * this method does not need to return ResultSet object
+     * since  we already have methods to handle returning values
      * @param sql the query to run
-     * @return ResultSet object  that contains data
      */
-    public static ResultSet runQuery(String sql){
+    public static void runQuery(String sql){
 
         try {
-            stm = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stm.executeQuery(sql); // setting the value of ResultSet object
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = stmt.executeQuery(sql); // setting the value of ResultSet object
             rsmd = rs.getMetaData() ;  // setting the value of ResultSetMetaData for reuse
         }catch(Exception e){
             System.out.println("ERROR OCCURRED WHILE RUNNING QUERY "+ e.getMessage() );
         }
-
-        return rs ;
 
     }
 
@@ -61,7 +62,7 @@ public class DB_Util {
         // BECAUSE WE CAN NOT TAKE ACTION ON AN OBJECT THAT DOES NOT EXIST
         try {
             if( rs!=null)  rs.close();
-            if( stm!=null)  stm.close();
+            if( stmt !=null)  stmt.close();
             if( con!=null)  con.close();
         } catch (Exception e) {
             System.out.println("ERROR OCCURRED WHILE CLOSING RESOURCES " + e.getMessage() );
@@ -238,6 +239,14 @@ public class DB_Util {
 
     }
 
+    /**
+     * Get First Cell Value at First row First Column
+     * @return as number
+     */
+    public int getFirstCellAsInt(){
+        return Integer.parseInt(getCellValue(1,1) );
+    }
+
     //
 
     /**
@@ -379,6 +388,5 @@ public class DB_Util {
         return allRowLstOfMap ;
 
     }
-
 
 }
